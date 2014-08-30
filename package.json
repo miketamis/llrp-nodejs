@@ -33,5 +33,5 @@
 	"engines": {
 		"node": ">=0.8"
 	},
-	"readmeFilename": "README.MD"
+	"readmeFilename": "README.md"
 }

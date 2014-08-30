@@ -19,7 +19,7 @@ You can provide a config object with the following values:
 
 ipaddress - IP of the RFID reader (default 192.168.0.30) 
 
-port = port of the RFID reader (default 5084)
+port - port of the RFID reader (default 5084)
 
 log - log messages in the console (default false)
 
