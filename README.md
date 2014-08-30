@@ -1,7 +1,7 @@
-RFID-nodejs
+llrp-nodejs
 ==========
 
-Nodejs module to communicate with RFID reader through LLRP protocol.
+Nodejs module to read RFID tags by connecting to a RFID reader through LLRP protocol.
 
 ### Authors
 
@@ -11,7 +11,7 @@ Jeriel Mari E. Lopez
 
 ### Installation
 
-npm install GeenenTijd/RFID-nodejs
+npm install GeenenTijd/llrp-nodejs
 
 ### Config
 
