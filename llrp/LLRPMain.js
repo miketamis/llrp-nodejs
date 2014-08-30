@@ -71,56 +71,58 @@ var llrpMain = function (config) {
 
 		// whenever reader sends data.
 		client.on('data', function (data) {
-			//check if there is data.
-			if (data === undefined) {
-				if (log) {
-					console.log('Undefined data returned by the rfid.');
-				}
-			}
-
-			//decoded message(s), passable to LLRPMessage class.
-			var messagesKeyValue = decode.message(data);
-
-			//loop through the message.
-			for (var index in messagesKeyValue) {
-				//possible we have more than 1 message in a reply.
-				var message = new LLRPMessage(messagesKeyValue[index]);
-				if (log) {
-					console.log('Receiving: ' + message.getTypeName());
+			process.nextTick(function () {
+				//check if there is data.
+				if (data === undefined) {
+					if (log) {
+						console.log('Undefined data returned by the rfid.');
+					}
 				}
 
-				//Check message type and send appropriate response.
-				//This send-receive is the most basic form to read a tag in llrp.
-				switch (message.getType()) {
-				case messageC.READER_EVENT_NOTIFICATION:
-					handleReaderNotification(message);
-					break;
-				case messageC.SET_READER_CONFIG_RESPONSE:
-					//send ADD_ROSPEC
-					writeMessage(client, bAddRoSpec);
-					break;
-				case messageC.ADD_ROSPEC_RESPONSE:
-					//send ENABLE_ROSPEC
-					writeMessage(client, bEnableRoSpec);
-					break;
-				case messageC.ENABLE_ROSPEC_RESPONSE:
-					//send START_ROSPEC
-					sendStartROSpec();
-					break;
-				case messageC.START_ROSPEC_RESPONSE:
-					writeMessage(client, bEnableEventsAndReport);
-					break;
-				case messageC.RO_ACCESS_REPORT:
-					handleROAccessReport(message);
-					break;
-				case messageC.KEEPALIVE:
-					//send KEEPALIVE_ACK
-					writeMessage(client, bKeepaliveAck);
-					break;
-				default:
-					//Default, doing nothing.
+				//decoded message(s), passable to LLRPMessage class.
+				var messagesKeyValue = decode.message(data);
+
+				//loop through the message.
+				for (var index in messagesKeyValue) {
+					//possible we have more than 1 message in a reply.
+					var message = new LLRPMessage(messagesKeyValue[index]);
+					if (log) {
+						console.log('Receiving: ' + message.getTypeName());
+					}
+
+					//Check message type and send appropriate response.
+					//This send-receive is the most basic form to read a tag in llrp.
+					switch (message.getType()) {
+					case messageC.READER_EVENT_NOTIFICATION:
+						handleReaderNotification(message);
+						break;
+					case messageC.SET_READER_CONFIG_RESPONSE:
+						//send ADD_ROSPEC
+						writeMessage(client, bAddRoSpec);
+						break;
+					case messageC.ADD_ROSPEC_RESPONSE:
+						//send ENABLE_ROSPEC
+						writeMessage(client, bEnableRoSpec);
+						break;
+					case messageC.ENABLE_ROSPEC_RESPONSE:
+						//send START_ROSPEC
+						sendStartROSpec();
+						break;
+					case messageC.START_ROSPEC_RESPONSE:
+						writeMessage(client, bEnableEventsAndReport);
+						break;
+					case messageC.RO_ACCESS_REPORT:
+						handleROAccessReport(message);
+						break;
+					case messageC.KEEPALIVE:
+						//send KEEPALIVE_ACK
+						writeMessage(client, bKeepaliveAck);
+						break;
+					default:
+						//Default, doing nothing.
+					}
 				}
-			}
+			});
 		});
 
 		//the reader or client has ended the connection.
