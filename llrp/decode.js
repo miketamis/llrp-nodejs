@@ -2,45 +2,44 @@
  * @fileOverview Decodes an llrp message or parameter from a Buffer object.
  *
  * This file was created at Openovate Labs.
- * 
+ *
  * @author Billie Dee R. Ang <billieang24@gmail.com>
  * @author Jeriel Mari E. Lopez <jerielmari@gmail.com>
  */
 
-/*--Requires--
------------------------------------------------------------------------------*/
-var messagesC = require('./LLRPMessagesConstants.js'),
-parameterC = require('./LLRPParametersConstants.js');
+'use strict';
+
+var parameterC = require('./LLRPParametersConstants.js');
 
 /**
  * Decodes a Buffer object to an object with key value
  * pairs that can be used to create a new LLRPMessage
- * 
+ *
  * @param  {Buffer} buffer  A buffer object.
  * @return {Object}         A key value pair that can be used to create a new LLRPMessage.
  */
-exports.message = function(buffer, returnObject) {
+exports.message = function (buffer, returnObject) {
 	//is the return object not set
-	if (returnObject === undefined) {
+	if (typeof returnObject === 'undefined') {
 		//set as empty array
 		returnObject = [];
 	}
 
 	//if we have an empty Buffer object.
-	if (buffer.length == 0) {
+	if (buffer.length === 0) {
 		//end the recursion.
 		return undefined;
 	}
 
 	//set variables
-	var length = buffer.readUInt32BE(2);				//length would be read from the 3rd octet, 4 octets.
+	var length = buffer.readUInt32BE(2); //length would be read from the 3rd octet, 4 octets.
 
 	//add to our returnObject our LLRPMessage key value pair.
 	returnObject.push({
-		type: ((buffer[0] & 3) << 8) | buffer[1],		//type is the first 2 bits of the first octet and the second octet.
-		length: length,									//total length of message in octets.
-		id: buffer.readUInt32BE(6),						//id would be read from the 7th octet, 4 octets.
-		parameter: buffer.slice(10, length),		//the parameter value would be starting from 11 up to the end of the curernt message.
+		type: ((buffer[0] & 3) << 8) | buffer[1], //type is the first 2 bits of the first octet and the second octet.
+		length: length, //total length of message in octets.
+		id: buffer.readUInt32BE(6), //id would be read from the 7th octet, 4 octets.
+		parameter: buffer.slice(10, length), //the parameter value would be starting from 11 up to the end of the curernt message.
 	});
 
 	//check if there are still parameters following this parameter.
@@ -49,44 +48,46 @@ exports.message = function(buffer, returnObject) {
 	exports.message(buffer.slice(length), returnObject);
 
 	return returnObject;
-}
+};
 
 /**
  * Decodes a Buffer object to an object with key value
  * pairs that can be used to create a new LLRPParameter.
- * 
+ *
  * @param  {Buffer} buffer    	 A buffer object.
  * @param  {Array} returnObject  An array containing objects for LLRPParameter, recursion.
  * @return {Array}               An array containing all the decoded objects.
  */
-exports.parameter = function(buffer, returnObject) {
+exports.parameter = function (buffer, returnObject) {
 	//is the return object not set
-	if (returnObject === undefined) {
+	if (typeof returnObject === 'undefined') {
 		//set as empty array
 		returnObject = [];
 	}
 
 	//if we have an empty Buffer object.
-	if (buffer.length == 0) {
-		//end the recursion.
+	if (buffer.length === 0) {
 		return undefined;
 	}
 
 	//set variables.
-	var type = null, length = 0, value = null, subParameters = undefined, reserved = 0;
+	var type = null;
+	var length = 0;
+	var value = null;
+	var subParameters = null;
+	var reserved = 0;
 
 	//if is TV-encoded (starts with first bit set as 1)
 	if (buffer[0] & 128) {
-		type = buffer[0] & 127;								//type is the first 7 bits of the first octet.
-		length = parameterC.tvLengths[type];				//each TV has a defined length, we reference in our parameter constant.
-															//since it is not present in a TV encoded buffer.
-		value = buffer.slice(1, length);					//the value in a TV starts from the second octet up the entire length of the buffer.
-		reserved = 1;										//reserved is set as 1 on the first octet's most significant bit.
-	}
-	else {
-		type = ((buffer[0] & 3) << 8) | buffer[1];			//type is the first 2 bits of the first octet and the second octet.
-		length = buffer.readUInt16BE(2);					//each TLV has length in the third and fourth octet.
-		value = buffer.slice(4, length);					//the value in a TLV starts from the fifth octet up the entire length of the buffer.
+		type = buffer[0] & 127; //type is the first 7 bits of the first octet.
+		length = parameterC.tvLengths[type]; //each TV has a defined length, we reference in our parameter constant.
+		//since it is not present in a TV encoded buffer.
+		value = buffer.slice(1, length); //the value in a TV starts from the second octet up the entire length of the buffer.
+		reserved = 1; //reserved is set as 1 on the first octet's most significant bit.
+	} else {
+		type = ((buffer[0] & 3) << 8) | buffer[1]; //type is the first 2 bits of the first octet and the second octet.
+		length = buffer.readUInt16BE(2); //each TLV has length in the third and fourth octet.
+		value = buffer.slice(4, length); //the value in a TLV starts from the fifth octet up the entire length of the buffer.
 	}
 
 	//see if our parameter constant lists this buffer as having subParameters
@@ -112,4 +113,4 @@ exports.parameter = function(buffer, returnObject) {
 	exports.parameter(buffer.slice(length), returnObject);
 
 	return returnObject;
-}
+};
