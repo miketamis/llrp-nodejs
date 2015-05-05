@@ -11,7 +11,7 @@ Jeriel Mari E. Lopez
 
 ### Installation
 
-npm install GeenenTijd/llrp-nodejs
+npm install llrp
 
 ### Config
 
