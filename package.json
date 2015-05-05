@@ -22,10 +22,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/GeenenTijd/RFID-nodejs"
+        "url": "https://github.com/GeenenTijd/llrp-nodejs"
     },
     "bugs": {
-        "url": "https://github.com/GeenenTijd/RFID-nodejs/issues"
+        "url": "https://github.com/GeenenTijd/llrp-nodejs/issues"
     },
     "main": "./index.js",
     "analyze": false,
