@@ -15,26 +15,26 @@
  * @param  {Int}     value            the parameter type number.
  * @param  {Object}  exportsObject    the object that will contain the "constants"
  */
-var define = function (name, value, exportsObject) {
-	//check if exportsObject is set.
-	if (exportsObject === undefined) {
-		//tell them there is an error.
-		throw new Error('Undefined exportsObject in defining constants.');
-	}
+var define = function(name, value, exportsObject) {
+  //check if exportsObject is set.
+  if (exportsObject === undefined) {
+    //tell them there is an error.
+    throw new Error('Undefined exportsObject in defining constants.');
+  }
 
-	//defining our constant.
-	Object.defineProperty(exportsObject, name, {
-		'value': value,
-		'enumerable': true,
-		'writable': false, //non-writable, making it a constant.
-	});
+  //defining our constant.
+  Object.defineProperty(exportsObject, name, {
+    value: value,
+    enumerable: true,
+    writable: false //non-writable, making it a constant.
+  });
 
-	//defining our constant, reversed with key as value and value as key.
-	Object.defineProperty(exportsObject, value, {
-		'value': name,
-		'enumerable': true,
-		'writable': false, //non-writable, making it a constant.
-	});
+  //defining our constant, reversed with key as value and value as key.
+  Object.defineProperty(exportsObject, value, {
+    value: name,
+    enumerable: true,
+    writable: false //non-writable, making it a constant.
+  });
 };
 
 var exportsObject = {};
