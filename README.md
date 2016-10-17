@@ -5,7 +5,7 @@ Nodejs module to read RFID tags by connecting to a RFID reader through LLRP prot
 
 ## Status
 
-27 August 2015: This package is currently a test to use node.js to communicate with a RFID reader. Since people have shown interest I'll start implementing the llrp standard. I've set the goal at the end of the year but I hope to find the time to finish this sooner. You can follow the progress on the development branch.
+Do not use for any serious development. This module is only able to read tag ids and doesn't implement the entire LLRP protocol.
 
 ### Authors
 
