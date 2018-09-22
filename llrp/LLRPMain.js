@@ -204,8 +204,8 @@ var llrpMain = function (config) {
 							tagSeenCount: 0
 						};
 
-						if (typeof subParameters[parameterC.EPC96] !== 'undefined') {
-							tag.tagID = subParameters[parameterC.EPC96].toString('hex');
+						if (typeof subParameters[241] !== 'undefined') {
+							tag.tagID = subParameters[241].toString('hex');
 						}
 
 						if (typeof subParameters[parameterC.TagSeenCount] !== 'undefined') {
